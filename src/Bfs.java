@@ -1,74 +1,74 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Bfs
 {
 
-	
-	public ArrayList<Node> BreathFirstSearch(Node root)
+	public ArrayList<Node> breathFirstSearch(Node root)
 	{
-		ArrayList<Node> pathToSolution = new ArrayList<Node>();
-		ArrayList<Node> open = new ArrayList<Node>();
-		ArrayList<Node> close = new ArrayList<Node>();
+		Queue<Node> open = new LinkedList<Node>();
+		Queue<Node> close = new LinkedList<Node>();
 		
 		open.add(root);
 		boolean found = false;
-		int counter = 0;
 		
 		while(open.size() > 0 && found == false)
 		{
-			Node currentNode = open.get(0);
+			Node currentNode = open.remove();
 			close.add(currentNode);
-			open.remove(0);
+			
 			
 			currentNode.setChildern();
-
-			for(int i = 0; i<currentNode.getChilderNumber(); i++)
+			int size = currentNode.getChilderNumber();
+			for(int i = 0; i<size; i++)
 			{
 				Node child = currentNode.getChildren()[i];
 				
 				if(child.stopCondition() == true)
 				{
-					System.out.println("Found");
-					pathTrace(pathToSolution, child);
 					found = true;
-				}
-				
-				if(contains(open, child) == false && contains(close, child) == false)
+					return pathTrace(child);
+				}		
+				else if(contains(open, child) == false && contains(close, child) == false)
 				{
 					open.add(child);
 				}
-				
-			}
-				
+			}	
 		}
 		
-		return pathToSolution;
+		return null;
 	}
 	
 	
-	public void pathTrace(ArrayList<Node> path, Node n)
+	public ArrayList<Node> pathTrace(Node n)
 	{
+		ArrayList<Node> path = new ArrayList<Node>();
 		Node current = n;
 		path.add(current);
 		
-		while(current.previous != null)
+		while(current.getPrevious() != null)
 		{
-			current = current.previous;
+			current = current.getPrevious();
 			path.add(current);
-			
-		}
-	}
-	public boolean contains(ArrayList<Node> list, Node node)
-	{
-		for(int i = 0; i<list.size(); i++)
-		{
-			if(list.get(i).isSame(node))
-				return true;
 		}
 		
+		return path;
+	} 
+	
+	
+	public boolean contains(Queue<Node> list, Node node)
+	{
+		Queue<Node> n = new LinkedList<Node>(list);
+		
+		while(n.size() > 0)
+		{
+			if(n.remove().isSame(node))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
-	
-
 
 }

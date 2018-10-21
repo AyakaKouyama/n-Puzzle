@@ -1,39 +1,86 @@
 
 public class Node 
 {
-	public Node previous;
-	Node []children;
-	String order;
-	int [][]numbers;
-	int [][]goal;
-	int rows;
-	int columns;
-	int childrenNumber;	
-	int maxDeepth = 10000000;
-	public int deepth;
-	public String prevMove;
+	private Node previous;
+	private Node []children;
 	
-	public Node(Node previous, int[][] numbers, int rows, int columns, String order, int deepth, String move)
+	private int [][]numbers;
+	private int [][]goal;
+	
+	private String order;
+	private char prevMove;
+	
+	private int rows;
+	private int columns;
+	private int depth;
+	private int hammingDistance;
+	private int manhatanDistance;
+	
+	public Node(Node previous, int[][] numbers, int rows, int columns, String order, char prevMove, int depth)
 	{
 		this.previous = previous;
 		this.numbers = numbers;
 		this.rows = rows;
 		this.columns = columns;
+		this.depth = depth;
+		this.prevMove = prevMove;
+		
+		order = order.toUpperCase();
 		this.order = order;
-		this.deepth = deepth;
 		
-		this.childrenNumber = getChilderNumber();
 		this.children = new Node[4];
-		this.prevMove = move;
-		//if(deepth < 2)
-		//	setChildern();
-		
-	//	printPuzzle();
-		
-		goal = new int[rows][columns];
+		this.goal = new int[rows][columns];
 		goalState();
 	}
 	
+	
+	//----------------------------------------
+	
+	public Node getPrevious()
+	{
+		return previous;
+	}
+	
+	public int[][] getNumbers()
+	{
+		return numbers;
+	}
+	
+	public int getRows()
+	{
+		return rows;
+	}
+	
+	public int getCoulums()
+	{
+		return columns;
+	}
+	
+	public Node[] getChildren()
+	{
+		return children;
+	}
+	
+	public int getColumn(int value)
+	{
+		return (value - 1) % columns;
+	}
+	
+	public int getRow(int value)
+	{
+		return (value - 1) / rows;
+	}
+	
+	public int manhatanScore()
+	{
+		return depth + manhatan();
+	}
+	
+	public int hammingScore()
+	{
+		return depth + hamming();
+	}
+	//---------------------------------------
 	
 	public void goalState()
 	{
@@ -70,22 +117,16 @@ public class Node
 	public int getChilderNumber()
 	{
 		int counter = 0;
-		if(canGoUp() && prevMove != "D")
+		if(canGoUp() && prevMove != 'D')
 			counter++;
-		if(canGoLeft() && prevMove != "R")
+		if(canGoLeft() && prevMove != 'R')
 			counter++;
-		if(canGoDown()&& prevMove != "U")
+		if(canGoDown()&& prevMove != 'U')
 			counter++;
-		if(canGoRight() && prevMove != "L")
+		if(canGoRight() && prevMove != 'L')
 			counter++;
 		
 		return counter;	
-	}
-	
-	
-	public Node[] getChildren()
-	{
-		return children;
 	}
 	
 	
@@ -105,149 +146,50 @@ public class Node
 	
 	public void setChildern()
 	{
-		order.toUpperCase();
-		if(deepth < maxDeepth)
+		int index = 0;
+		for(int i = 0; i<4; i++)
 		{
-		if(order == "LRUD")
-		{
-			int index = 0;
-			if(canGoLeft() && prevMove != "R")
+			if(order.charAt(i) == 'L')
 			{
-				children[index] = new Node(this, copy(), rows, columns, order, deepth + 1, "L");
-				children[index].goLeft();
-			//	children[index].setChildern();
-				index++;
+				if(canGoLeft() && prevMove != 'R')
+				{
+					children[index] = new Node(this, copy(), rows, columns, order, 'L', depth + 1);
+					children[index].goLeft();
+					index++;
+				}
 			}
-			if(canGoRight() && prevMove != "L")
+			
+			if(order.charAt(i) == 'R')
 			{
-				children[index] = new Node(this, copy(), rows, columns, order, deepth + 1, "R");
-				children[index].goRight();
-				//children[index].setChildern();
-				index++;
+				if(canGoRight() && prevMove != 'L')
+				{
+					children[index] = new Node(this, copy(), rows, columns, order, 'R', depth + 1);
+					children[index].goRight();
+					index++;
+				}
 			}
-			if(canGoUp() && prevMove != "D")
+			if(order.charAt(i) == 'U')
 			{
-				children[index] = new Node(this, copy(), rows, columns, order, deepth + 1, "U");
-				children[index].goUp();
-				//children[index].setChildern();
-				index++;
+				if(canGoUp() && prevMove != 'D')
+				{
+					children[index] = new Node(this, copy(), rows, columns, order, 'U', depth + 1);
+					children[index].goUp();
+					index++;
+				}
 			}
-			if(canGoDown() && prevMove != "U")
+			if(order.charAt(i) == 'D')
 			{
-				children[index] = new Node(this, copy(), rows, columns, order, deepth + 1, "D");
-				children[index].goDown();
-				//children[index].setChildern();
-				index++;
+				if(canGoDown() && prevMove != 'U')
+				{
+					children[index] = new Node(this, copy(), rows, columns, order, 'D', depth + 1);
+					children[index].goDown();
+					index++;
+				}
 			}
+			
+		}	
+	}
 
-		}
-		else if(order == "RLUD")
-		{
-			
-		}
-		else if(order == "ULRD")
-		{
-			
-		}
-		else if(order == "LURD")
-		{
-			
-		}
-		else if(order == "RULD")
-		{
-			
-		}
-		else if(order == "URLD")
-		{
-			
-		}
-		else if(order == "URDL")
-		{
-			
-		}
-		else if(order == "RUDL")
-		{
-			
-		}
-		else if(order == "DURL")
-		{
-			
-		}
-		else if(order == "UDRL")
-		{
-			
-		}
-		else if(order == "RDUL")
-		{
-			
-		}
-		else if(order == "DRUL")
-		{
-			
-		}
-		else if(order == "LDUR")
-		{
-			
-		}
-		else if(order == "UDLR")
-		{
-			
-		}
-		else if(order == "DULR")
-		{
-			
-		}
-		else if(order == "LUDR")
-		{
-			
-		}
-		else if(order == "ULDR")
-		{
-			
-		}
-		else if(order == "RLDU")
-		{
-			
-		}
-		else if(order == "LRDU")
-		{
-			
-		}
-		else if(order == "DRLU")
-		{
-			
-		}
-		else if(order == "RDLU")
-		{
-			
-		}
-		else if(order == "LDRU")
-		{
-			
-		}
-		else if(order == "DLRU")
-		{
-			
-		}
-		}
-		
-		
-	}
-	public int[][] getNumbers()
-	{
-		return numbers;
-	}
-	
-	public int getRows()
-	{
-		return rows;
-	}
-	
-	public int getCoulums()
-	{
-		return columns;
-	}
-	
 	public int[] indexOfBlank()
 	{
 		int index[] = new int[2];
@@ -280,7 +222,7 @@ public class Node
 		}
 	}
 	
-	public int  goUp()
+	public int goUp()
 	{
 		int posX = indexOfBlank()[0];
 		int posY = indexOfBlank()[1];
@@ -295,7 +237,6 @@ public class Node
 		}
 		
 		return -1;
-		
 	}
 	
 	public int goLeft()
@@ -314,7 +255,6 @@ public class Node
 		}
 		
 		return -1;
-		
 	}
 	
 	public int goRight()
@@ -413,5 +353,46 @@ public class Node
 		
 		return true;
 	}
+	
+	public int hamming()
+	{
+		int expected = 1;
+		for(int i = 0; i<rows; i++)
+		{
+			for(int j = 0; j< columns; j++)
+			{
+				if(i == rows - 1 && j == columns - 1)
+				{
+					expected = 0;
+				}
+				
+				if(numbers[i][j] != expected && numbers[i][j] != 0)
+				{
+					hammingDistance++;
+				}
+				
+				expected++;
+			}
+		}
+		return hammingDistance;
+	}
+	
+	public int manhatan()
+	{
+		manhatanDistance = 0;
+		for(int i = 0; i<rows; i++)
+		{
+			for(int j = 0; j<columns; j++)
+			{
+				int value = numbers[i][j]; 
+	            if (value != 0) 
+	            { 
+	                manhatanDistance += Math.abs(i - getRow(value)) + Math.abs(j - getColumn(value)); 
+	            }
+			}
+		}
+		return manhatanDistance;
+	}
+	
 	
 }

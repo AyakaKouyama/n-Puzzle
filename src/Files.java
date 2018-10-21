@@ -25,6 +25,7 @@ public class Files
 			FileReader file = new FileReader("input.txt");
 			BufferedReader buffer = new BufferedReader(file);
 			String txtLine = buffer.readLine();
+			buffer.close();
 			return txtLine;
 		}
 		catch (IOException e) 
@@ -47,9 +48,8 @@ public class Files
 	
 	public int[][] ReadPuzzle()
 	{
-		try
+		try(Scanner sc = new Scanner(new BufferedReader(new FileReader("input.txt")));)
 		{
-			Scanner sc = new Scanner(new BufferedReader(new FileReader("input.txt")));
 			String txtLine = sc.nextLine();
 			
 			int rows = txtLine.charAt(0) - '0';

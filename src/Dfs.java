@@ -1,45 +1,59 @@
-import java.awt.List;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Stack;
 
 public class Dfs
 {
 
-	int maxDepth = 25;
-	int currentDepth = 0;
-	boolean found = false;
-	int solution = 0;
-	Stack<Node> path = new Stack<Node>();
-	ArrayList<Node> foundPath = null;
+	private int maxDepth = 20;
+	private boolean found = false;
+	private ArrayList<Node> foundPath;
+	private Stack<Node> visited = new Stack<Node>();
 	
-
-	
-	public ArrayList<Node> test(Node node, int depth)
+	Dfs()
 	{
-		Stack<Node> visited = new Stack<Node>();
-		if(depth < maxDepth)
+		foundPath = new ArrayList<Node>();
+	}
+
+	public ArrayList<Node> getPath()
+	{
+		return foundPath;
+	}
+	
+	
+	public void deepFirstSearch(Node node, int depth)
+	{
+		try
 		{
+			if(depth > maxDepth)
+			{
+				return;
+			}
+			
 			visited.add(node);
 			if(node.stopCondition() == true && found == false)
 			{
 				found = true;
-				solution = depth;
 				foundPath = tracePath(node);
-				return foundPath;
+				return;
 			}
-			
-			node.setChildern();
-			for(int i = 0; i<node.getChilderNumber(); i++)
+			else
 			{
-				if(contain(visited, node.getChildren()[i]) == false)
-					test(node.getChildren()[i], depth + 1);
+				node.setChildern();
+				for(int i = 0; i<node.getChilderNumber(); i++)
+				{
+					if(contain(visited, node.getChildren()[i]) == false)
+					{
+						deepFirstSearch(node.getChildren()[i], depth + 1);
+					}
+				}
 			}
-			
 		}
+		catch(OutOfMemoryError exc)
+		{
+			System.out.println("Out of memory");
+		}
+
 		
-		return foundPath;
 	}
 	
 	public ArrayList<Node> tracePath(Node node)
@@ -49,9 +63,9 @@ public class Dfs
 		Node current = node;
 		path.add(current);
 		
-		while(current.previous != null)
+		while(current.getPrevious()!= null)
 		{
-			current = current.previous;
+			current = current.getPrevious();
 			path.add(current);
 			
 		}
@@ -59,76 +73,7 @@ public class Dfs
 		return path;
 	}
 	
-	public Stack<Node> depthFirstSearch(Node node) // some suspicious recursive method
-	{
-		Stack<Node> open = new Stack<Node>();
-		Stack<Node> close = new Stack<Node>();
-		
-		open.push(node);
-		
-		currentDepth = 0;
-		
-			while(open.empty() == false)
-			{	
-				Node current = open.pop();
-				
-				if(open.size() > maxDepth)
-				{
-					int counter = 0;
-					//for(int i = 0; i< open.size(); i++)
-					//{
-					//	Node toClose = open.pop();
-					//	close.push(toClose);
-					//}				
-					//open.push(node);
-				//	while(counter != 0)
-					//{
-					//	current = open.pop();
-					//	for(int i = 0; i<current.getChilderNumber(); i++)
-					//	{
-					//		if(contain(close, current.getChildren()[i]) == false)
-					//			counter++;
-					//	}
-						
-				//	}
-				//	open.push(current);
-				}
-				
-				close.push(current);
-				//open.pop();
-				
-				if(current.stopCondition() == true)
-				{
-					current.printPuzzle();
-					System.out.println("Stop");
-					return path;
-				}
-				
-				current.setChildern();
-				for(int i = 0; i<current.getChilderNumber(); i++)
-				{
-					if(contain(close, current.getChildren()[i]) == false)
-					open.push(current.getChildren()[i]);
-				}
-				System.out.println(open.size());
-			}
-		
-		return null;
-	}
-	
-	
-	public void getPath(Node node)
-	{
-		Node current = node;
-		path.add(current);
-		
-		while(current.previous != null)
-		{
-			current = current.previous;
-			path.add(current);
-			
-		}
-	}
+
 	public boolean contain(Stack<Node> open, Node n)
 	{
 		for(int i = 0; i<open.size(); i++)
@@ -141,16 +86,5 @@ public class Dfs
 		
 		return false;
 	}
-	
-	/*
-	 * public void solve()
-	 * {
-	 * if(node == null)
-	 * return;
-	 * 
-	 * System.out.println(node.getNumbers[0][0]);
-	 * solve(node.left);
-	 * solve(node.right);
-	 */
 
 }
