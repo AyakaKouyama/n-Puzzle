@@ -5,18 +5,38 @@ import java.util.Queue;
 public class Bfs
 {
 
+	private int visited = 0;
+	private int processed = 0;
+	private int depth = 0;
+	
+	public int getMaxRecursionDepth()
+	{
+		return depth;
+	}
+	public int getVisitedNodesCounter()
+	{
+		return visited;
+	}
+	
+	public int getProcessedNodesCounter()
+	{
+		return processed;
+	}
+	
 	public ArrayList<Node> breathFirstSearch(Node root)
 	{
 		Queue<Node> open = new LinkedList<Node>();
 		Queue<Node> close = new LinkedList<Node>();
 		
 		open.add(root);
+		visited++;
 		boolean found = false;
 		
 		while(open.size() > 0 && found == false)
 		{
 			Node currentNode = open.remove();
 			close.add(currentNode);
+			visited++;
 			
 			
 			currentNode.setChildern();
@@ -28,11 +48,15 @@ public class Bfs
 				if(child.stopCondition() == true)
 				{
 					found = true;
+					processed = close.size();
+					depth = child.getDepth();
+					
 					return pathTrace(child);
 				}		
 				else if(contains(open, child) == false && contains(close, child) == false)
 				{
 					open.add(child);
+					visited++;
 				}
 			}	
 		}

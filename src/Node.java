@@ -35,6 +35,15 @@ public class Node
 	
 	
 	//----------------------------------------
+	public int getDepth()
+	{
+		return depth;
+	}
+	
+	public char getPrevMove()
+	{
+		return prevMove;
+	}
 	
 	public Node getPrevious()
 	{

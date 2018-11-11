@@ -14,6 +14,15 @@ public class Files
 
 	public void Save(String data)
 	{
+
+		try(FileWriter file = new FileWriter(fileName);)
+		{
+			file.write(data);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -22,7 +31,7 @@ public class Files
 		
 		try
 		{
-			FileReader file = new FileReader("input.txt");
+			FileReader file = new FileReader(fileName);
 			BufferedReader buffer = new BufferedReader(file);
 			String txtLine = buffer.readLine();
 			buffer.close();
@@ -48,7 +57,7 @@ public class Files
 	
 	public int[][] ReadPuzzle()
 	{
-		try(Scanner sc = new Scanner(new BufferedReader(new FileReader("input.txt")));)
+		try(Scanner sc = new Scanner(new BufferedReader(new FileReader(fileName)));)
 		{
 			String txtLine = sc.nextLine();
 			
