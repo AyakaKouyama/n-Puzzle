@@ -1,38 +1,39 @@
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class Dfs
+public class Dfs implements IMethod
 {
 
 	private int maxDepth = 20;
 	private int maxRecursionDepth = 0;
 	private int processed = 0;
 	private boolean found = false;
-	private ArrayList<Node> foundPath;
+	private ArrayList<Node> path;
 	private Stack<int[][]> numbers = new Stack<int[][]>();
 	
+	@Override
 	public ArrayList<Node> getPath()
 	{
-		return foundPath;
+		return path;
 	}
-	
-
+	@Override
 	public int getMaxRecursionDepth()
 	{
 		return maxRecursionDepth;
 	}
-	
+	@Override
 	public int getVisitedNodesCounter()
 	{
 		return numbers.size();
 	}
-	
+	@Override
 	public int getProcessedNodesCounter()
 	{
 		return processed;
 	}
-	public 
-	void deepFirstSearch(Node node, int depth)
+	
+	@Override
+	public void solve(Node node, int depth)
 	{
 
 		try
@@ -57,9 +58,9 @@ public class Dfs
 			
 			if(node.stopCondition() == true)
 			{
-				System.out.println(depth);
+			//	System.out.println(depth);
 				found = true;
-				foundPath = tracePath(node);
+				path = pathTrace(node);
 			}
 			else
 			{
@@ -69,7 +70,7 @@ public class Dfs
 					
 					if(numbers.search(node.getChildren()[i]) == -1)
 					{
-						deepFirstSearch(node.getChildren()[i], depth + 1);
+						solve(node.getChildren()[i], depth + 1);
 						processed++;
 					}
 
@@ -84,7 +85,9 @@ public class Dfs
 		
 	}
 	
-	public ArrayList<Node> tracePath(Node node)
+	
+	@Override
+	public ArrayList<Node> pathTrace(Node node)
 	{
 		ArrayList<Node> path = new ArrayList<Node>();
 

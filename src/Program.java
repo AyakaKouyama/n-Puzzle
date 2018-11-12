@@ -19,8 +19,8 @@ public class Program
 	
 	public static void main(String[] args) 
 	{
-		long start;
-		long stop;
+		long start = 0;
+		long stop = 0;
 		ArrayList<Node> solutionPath = null;
 		
 		if(args.length < 4)
@@ -44,74 +44,63 @@ public class Program
 		int visitedNodes = 0;
 		int processedNodes = 0;
 		int maxRecursion = 0;
-
+		Solver solver = null;
 		try
 		{
-		if(method.equals("BFS") || method.equals("DFS") || method.equals("ASTR"))
-		{
-			Node root = new Node(null, file.ReadPuzzle(), file.GetRows(), file.GetColumns(), order, '0', 0);
+			if(method.equals("BFS") || method.equals("DFS") || method.equals("ASTR"))
+			{
+				Node root = new Node(null, file.ReadPuzzle(), file.GetRows(), file.GetColumns(), order, '0', 0);
+	
+				if(method.equals("BFS"))
+				{
+					solver = new Solver(new Bfs());	
+				}
+				else if(method.equals("DFS"))
+				{
+					solver = new Solver(new Dfs());
+				}
+				else if(method.equals("ASTR"))
+				{
+					solver = new Solver(new Astar(order));
+					root.setOrder("LURD");
+				}
+				
 			
-			if(method.equals("BFS"))
-			{
 				start = System.nanoTime();
-				Bfs bfs = new Bfs();
-				solutionPath= bfs.breathFirstSearch(root);
+				solver.solve(root, 0);
 				stop = System.nanoTime();
-				
-				StringBuilder str = new StringBuilder();
-				if(getMoves(solutionPath) != null)
-						str.append(getMoves(solutionPath).length() + System.lineSeparator());
-				else
-					str.append("-1" + System.lineSeparator());
-				
-				str.append(bfs.getVisitedNodesCounter( )+ System.lineSeparator());
-				str.append(bfs.getProcessedNodesCounter() + System.lineSeparator());
-				str.append(bfs.getMaxRecursionDepth() + System.lineSeparator());
-				str.append(new DecimalFormat("##.###").format((float)((stop - start)/1e6)) + System.lineSeparator());
-				statistics.Save(str.toString());
-
-				
+	
 			}
-			else if(method.equals("DFS"))
+			else
 			{
-				start = System.nanoTime();
-				Dfs dfs = new Dfs();
-				dfs.deepFirstSearch(root, 0);
-				solutionPath = dfs.getPath();
-				stop = System.nanoTime();
-				
-				StringBuilder str = new StringBuilder();
-				if(getMoves(solutionPath) != null)
-						str.append(getMoves(solutionPath).length() + System.lineSeparator());
-				else
-					str.append("-1" + System.lineSeparator());
-				str.append(dfs.getVisitedNodesCounter() + System.lineSeparator());
-				str.append(dfs.getProcessedNodesCounter() + System.lineSeparator());
-				str.append(dfs.getMaxRecursionDepth() + System.lineSeparator());
-				str.append(new DecimalFormat("##.###").format((float)((stop - start)/1e6)) + System.lineSeparator());
-
-				statistics.Save(str.toString());
+				System.out.println("Wrong arguments. Available methods are: 'bfs', 'dfs', 'astar'");
+	
 			}
-			else if(method.equals("ASTR"))
-			{
-				start = System.nanoTime();
-				Astar astr = new Astar(order);
-				solutionPath = astr.AStar(root);
-				stop = System.nanoTime();
-				
-				StringBuilder str = new StringBuilder();
-				if(getMoves(solutionPath) != null)
-						str.append(getMoves(solutionPath).length() + System.lineSeparator());
-				else
-					str.append("-1" + System.lineSeparator());
-				str.append(astr.getVisitedNodesCounter( )+ System.lineSeparator());
-				str.append(astr.getProcessedNodesCounter() + System.lineSeparator());
-				str.append(astr.getMaxRecursionDepth() + System.lineSeparator());
-				str.append(new DecimalFormat("##.###").format((float)((stop - start)/1e6)) + System.lineSeparator());
-				
-				statistics.Save(str.toString());
-
-			}
+		}
+		catch(OutOfMemoryError e)
+		{
+			System.out.println("Out of memory");
+			stop = System.nanoTime();
+		}
+		finally
+		{
+			visitedNodes = solver.getVisitedNodesCounter();
+			processedNodes = solver.getProcessedNodesCounter();
+			maxRecursion = solver.getMaxRecursionDepth();
+			solutionPath = solver.getPath();
+		
+			
+			StringBuilder str = new StringBuilder();
+			if(getMoves(solutionPath) != null)
+					str.append(getMoves(solutionPath).length() + System.lineSeparator());
+			else
+				str.append("-1" + System.lineSeparator());
+			
+			str.append(visitedNodes + System.lineSeparator());
+			str.append(processedNodes + System.lineSeparator());
+			str.append(maxRecursion + System.lineSeparator());
+			str.append(new DecimalFormat("##.###").format((float)((stop - start)/1e6)) + System.lineSeparator());
+			statistics.Save(str.toString());
 			
 			String solutionTxt;
 			if(solutionPath != null)
@@ -126,18 +115,10 @@ public class Program
 			
 			solution.Save(solutionTxt);
 			System.out.println("DONE");
-		}
-		else
-		{
-			System.out.println("Wrong arguments. Available methods are: 'bfs', 'dfs', 'astar'");
-
-		}
-		}
-		catch(OutOfMemoryError e)
-		{
-			System.out.println("Out of memory");
-			stop = System.nanoTime();
+			
 		}
 
 	}
 }
+
+

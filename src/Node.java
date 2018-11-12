@@ -91,6 +91,11 @@ public class Node
 	}
 	//---------------------------------------
 	
+	public void setOrder(String order)
+	{
+		this.order = order;
+	}
+	
 	public void goalState()
 	{
 		int k = 0;

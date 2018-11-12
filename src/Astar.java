@@ -3,41 +3,48 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-public class Astar 
+public class Astar implements IMethod
 {
 	private String heuristic;
 	private int visited = 0;
 	private int processed = 0;
-	private int depth = 0;
+	private int maxDepth = 0;
+	private ArrayList<Node> path;
 	
 	public Astar(String heuristic)
 	{
 		heuristic = heuristic.toUpperCase();
 		this.heuristic = heuristic;
 	}
-	
+	@Override
+	public ArrayList<Node> getPath()
+	{
+		return path;
+	}
+	@Override
 	public int getMaxRecursionDepth()
 	{
-		return depth;
+		return maxDepth;
 	}
+	@Override
 	public int getVisitedNodesCounter()
 	{
 		return visited;
 	}
-	
+	@Override
 	public int getProcessedNodesCounter()
 	{
 		return processed;
 	}
 
-	public ArrayList<Node> AStar(Node node)
+	@Override
+	public void solve(Node node, int depth)
 	{
 		try
 		{
 			PriorityQueue<Node> queue = null;
 			Queue<Node> close = new LinkedList<Node>();
 			boolean found = false;
-			
 			if(heuristic.equals("HAMM"))
 			{
 				queue = new PriorityQueue<Node>(new HammingNodeCompare());
@@ -46,7 +53,7 @@ public class Astar
 			{
 				queue = new PriorityQueue<Node>(new ManhatanNodeCompare());
 			}
-
+			
 			queue.add(node);
 			visited++;
 			
@@ -55,20 +62,21 @@ public class Astar
 				Node currentNode = queue.remove();
 				close.add(currentNode);
 				visited++;
-				
 				currentNode.setChildern();
 				int size = currentNode.getChilderNumber();
+				
 				for(int i = 0; i<size; i++)
 				{
 					Node child = currentNode.getChildren()[i];
-					
+					//System.out.println(currentNode.getChildren()[i]);
 					if(child.stopCondition() == true)
 					{
 						found = true;
 						processed = close.size();
-						depth = child.getDepth();
+						maxDepth = child.getDepth();
 						
-						return pathTrace(child);
+						//return pathTrace(child);
+						path = pathTrace(child);
 					}
 					else if(contains(queue, child) == false && contains(close, child) == false)
 					{
@@ -78,18 +86,18 @@ public class Astar
 				}	
 			}
 			
-			return null;
+			//return null;
 			
 		}
 		catch(OutOfMemoryError e)
 		{
 			System.out.println("Out of memory");
-			return null;
+			//return null;
 		}
 	}
 	
 	
-	public boolean contains(Queue<Node> list, Node node)
+	private boolean contains(Queue<Node> list, Node node)
 	{
 		Queue<Node> n = new LinkedList<Node>(list);
 		
@@ -103,6 +111,7 @@ public class Astar
 		return false;
 	}
 	
+	@Override
 	public ArrayList<Node> pathTrace(Node n)
 	{
 		ArrayList<Node> path = new ArrayList<Node>();
@@ -116,7 +125,8 @@ public class Astar
 		}
 		
 		return path;
-	} 
-	
+	}
+
+
 
 }

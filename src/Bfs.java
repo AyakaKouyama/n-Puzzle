@@ -2,28 +2,39 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Bfs
+public class Bfs implements IMethod
 {
 
 	private int visited = 0;
 	private int processed = 0;
-	private int depth = 0;
+	private int maxDepth = 0;
+	private ArrayList<Node> path;
 	
+	@Override
+	public ArrayList<Node> getPath()
+	{
+		return path;
+	}
+	@Override
 	public int getMaxRecursionDepth()
 	{
-		return depth;
+		return maxDepth;
 	}
+	
+	@Override
 	public int getVisitedNodesCounter()
 	{
 		return visited;
 	}
-	
+	@Override
 	public int getProcessedNodesCounter()
 	{
 		return processed;
 	}
 	
-	public ArrayList<Node> breathFirstSearch(Node root)
+	
+	@Override
+	public void solve(Node root, int depth)
 	{
 		Queue<Node> open = new LinkedList<Node>();
 		Queue<Node> close = new LinkedList<Node>();
@@ -49,9 +60,10 @@ public class Bfs
 				{
 					found = true;
 					processed = close.size();
-					depth = child.getDepth();
+					maxDepth = child.getDepth();
 					
-					return pathTrace(child);
+					//return pathTrace(child);
+					path = pathTrace(child);
 				}		
 				else if(contains(open, child) == false && contains(close, child) == false)
 				{
@@ -61,10 +73,11 @@ public class Bfs
 			}	
 		}
 		
-		return null;
+		//return null;
 	}
 	
 	
+	@Override
 	public ArrayList<Node> pathTrace(Node n)
 	{
 		ArrayList<Node> path = new ArrayList<Node>();
@@ -81,7 +94,7 @@ public class Bfs
 	} 
 	
 	
-	public boolean contains(Queue<Node> list, Node node)
+	private boolean contains(Queue<Node> list, Node node)
 	{
 		Queue<Node> n = new LinkedList<Node>(list);
 		
