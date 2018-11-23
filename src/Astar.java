@@ -68,14 +68,11 @@ public class Astar implements IMethod
 				for(int i = 0; i<size; i++)
 				{
 					Node child = currentNode.getChildren()[i];
-					//System.out.println(currentNode.getChildren()[i]);
 					if(child.stopCondition() == true)
 					{
 						found = true;
 						processed = close.size();
 						maxDepth = child.getDepth();
-						
-						//return pathTrace(child);
 						path = pathTrace(child);
 					}
 					else if(contains(queue, child) == false && contains(close, child) == false)
@@ -85,14 +82,11 @@ public class Astar implements IMethod
 					}
 				}	
 			}
-			
-			//return null;
-			
+						
 		}
 		catch(OutOfMemoryError e)
 		{
 			System.out.println("Out of memory");
-			//return null;
 		}
 	}
 	

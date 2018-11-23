@@ -1,5 +1,6 @@
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Program 
 {
@@ -45,6 +46,19 @@ public class Program
 		int processedNodes = 0;
 		int maxRecursion = 0;
 		Solver solver = null;
+		
+		int suma = 0;
+		long liczba = 1;
+		
+		for(int i = 0; i<20; i++)
+		{
+			suma += liczba * 4;
+			liczba *= 4;
+			System.out.println(liczba);
+		}
+		
+		System.out.println(suma);
+
 		try
 		{
 			if(method.equals("BFS") || method.equals("DFS") || method.equals("ASTR"))
@@ -114,6 +128,7 @@ public class Program
 			}
 			
 			solution.Save(solutionTxt);
+			System.out.println(new DecimalFormat("##.###").format((float)((stop - start)/1e6)));
 			System.out.println("DONE");
 			
 		}

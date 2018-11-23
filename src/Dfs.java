@@ -4,12 +4,15 @@ import java.util.Stack;
 public class Dfs implements IMethod
 {
 
-	private int maxDepth = 20;
+	private int maxDepth = 40;
 	private int maxRecursionDepth = 0;
 	private int processed = 0;
+	//private int rows = 0;
+	//private int columns = 0;
 	private boolean found = false;
 	private ArrayList<Node> path;
 	private Stack<int[][]> numbers = new Stack<int[][]>();
+	
 	
 	@Override
 	public ArrayList<Node> getPath()
@@ -35,7 +38,9 @@ public class Dfs implements IMethod
 	@Override
 	public void solve(Node node, int depth)
 	{
-
+		//rows = node.getRows();
+		//columns = node.getCoulums();
+		
 		try
 		{
 			if(found == true)
@@ -58,17 +63,18 @@ public class Dfs implements IMethod
 			
 			if(node.stopCondition() == true)
 			{
-			//	System.out.println(depth);
+				System.out.println("found");
 				found = true;
 				path = pathTrace(node);
 			}
 			else
 			{
 				node.setChildern();
-				for(int i = 0; i<node.getChilderNumber(); i++)
+				int size = node.getChilderNumber();
+				for(int i = 0; i<size; i++)
 				{
-					
-					if(numbers.search(node.getChildren()[i]) == -1)
+					//if(contains(numbers, node.getChildren()[i].getNumbers(), rows, columns) == false)
+					if(numbers.contains(node.getChildren()[i].getNumbers()) == false)
 					{
 						solve(node.getChildren()[i], depth + 1);
 						processed++;
@@ -104,5 +110,33 @@ public class Dfs implements IMethod
 		return path;
 	}
 	
+	public boolean contains(Stack<int[][]> stack, int[][] numbers, int rows, int columns)
+	{
+		Stack<int[][]> tempStack = (Stack<int[][]>) stack.clone();
+		
+		while(tempStack.isEmpty() == false)
+		{
+			int counter = 0;
+			int[][] temp = tempStack.pop();
+		
+			for(int i = 0; i<rows; i++)
+			{
+				for(int j = 0; j< columns; j++)
+				{
+					if(temp[i][j] == numbers[i][j])
+					{
+						counter++;
+					}
+				}
+			}
+			
+			if(counter == (rows * columns))
+			{
+				return true;
+			}
+		} 
+		
+		return false;
+	}
 
 }
