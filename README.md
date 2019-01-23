@@ -1,6 +1,6 @@
 # Artificial_Inteligence - n-Puzzle solver
 Solving n-Puzzle with BFS, DFS and A* alghoritms.
-To run programm you have to pass arguments:
+To run program you have to pass arguments:
 * method (astr - A*, dfs, bfs)
 * order - order of searching in methods DFS and BFS, for example: LURD means searching in order L (left), U (up), R (right), D (down) or heuristic in method A*: hamm (hamming heuristic), manh (manhattan heuristic)
 * file name of file which contains unsloved puzzle. Structure of file must be as shown below:
