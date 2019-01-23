@@ -1,4 +1,4 @@
-# Artificial_Inteligence - n-Puzzle solver
+# Artificial_Intelligence - n-Puzzle solver
 Solving n-Puzzle with BFS, DFS and A* alghoritms.
 To run program you have to pass arguments:
 * method (astr - A*, dfs, bfs)
