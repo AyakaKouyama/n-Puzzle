@@ -24,4 +24,7 @@ To run program you have to pass arguments:
     - maximum recursion depth
     - time of searching solution (in millisecons)
    
+For exapmle (using command line):
+
+<b> -java -jar program.jar dfs lurd input.txt output.txt stats.txt </b>
 Program made for university purpose.
